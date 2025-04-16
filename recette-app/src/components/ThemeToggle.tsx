@@ -6,7 +6,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="fixed top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-dark-surface text-gray-800 dark:text-dark-text hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-200"
+      className="fixed top-4 right-4 p-3 rounded-full bg-white dark:bg-dark-surface text-gray-800 dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 shadow-lg z-50"
       aria-label="Basculer le thème"
     >
       {theme === 'light' ? (

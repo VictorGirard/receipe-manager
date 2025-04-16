@@ -51,7 +51,7 @@ export default function RecetteDetail() {
       <div className="max-w-4xl mx-auto">
         <button
           onClick={() => navigate('/')}
-          className="mb-6 flex items-center text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
+          className="mb-6 flex items-center text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 animate-slide-up"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -59,7 +59,7 @@ export default function RecetteDetail() {
           Retour à l'accueil
         </button>
 
-        <div className="bg-white dark:bg-dark-surface rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white dark:bg-dark-surface rounded-xl shadow-lg overflow-hidden animate-slide-up [animation-delay:0.1s]">
           {recette.image?.[0] && (
             <div className="relative h-64">
               <img
@@ -72,10 +72,10 @@ export default function RecetteDetail() {
           )}
 
           <div className="p-6 space-y-6">
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-dark-text">{recette.nom}</h1>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-dark-text animate-slide-up [animation-delay:0.2s]">{recette.nom}</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4">
+              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.3s]">
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Informations</h3>
                 <p className="text-gray-600 dark:text-dark-text-secondary">
                   ⏱️ Durée : {getModalContent(recette).duration}
@@ -88,7 +88,7 @@ export default function RecetteDetail() {
                 </p>
               </div>
 
-              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4">
+              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.4s]">
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Ingrédients</h3>
                 <ul className="list-disc pl-5 text-gray-600 dark:text-dark-text-secondary">
                   {getModalContent(recette).ingredients.map((ingredient: string, index: number) => (
@@ -98,7 +98,7 @@ export default function RecetteDetail() {
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4">
+            <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.5s]">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Instructions</h3>
               <p className="text-gray-600 dark:text-dark-text-secondary whitespace-pre-line">
                 {getModalContent(recette).steps.join('\n')}

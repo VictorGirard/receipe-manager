@@ -47,10 +47,10 @@ export const getModalContent = (recette: Recette) => {
 
 export const getModalStyle = () => {
   return {
-    container: 'mx-auto max-w-2xl w-full bg-white rounded-xl p-6',
+    container: 'mx-auto max-w-2xl w-full bg-white dark:bg-dark-surface rounded-xl p-6',
     content: 'space-y-4',
-    section: 'bg-gray-50 p-4 rounded-lg border border-gray-200',
-    title: 'text-3xl font-bold text-gray-800 mb-4',
-    closeButton: 'absolute top-4 right-4 text-gray-500 hover:text-gray-700',
+    section: 'bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700',
+    title: 'text-3xl font-bold text-gray-800 dark:text-dark-text mb-4',
+    closeButton: 'absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
   };
 }; 
