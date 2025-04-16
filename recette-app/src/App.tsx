@@ -13,9 +13,10 @@ import {
   FireIcon
 } from '@heroicons/react/24/outline';
 import { fetchRecettes } from './services/airtable';
-import { getImageUrl, getImageStyle } from './services/imageService';
+import { getImageUrl } from './services/imageService';
 import RecetteDetail from './pages/RecetteDetail';
-import { iosTheme } from './styles/iosTheme';
+import { ThemeProvider } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 
 interface Recette {
   id: string;
@@ -308,12 +309,17 @@ function Home() {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/recette/:id" element={<RecetteDetail />} />
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-100 dark:bg-dark-bg">
+          <ThemeToggle />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/recette/:id" element={<RecetteDetail />} />
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 
