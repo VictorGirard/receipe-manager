@@ -10,6 +10,7 @@ export interface Recette {
   glucides?: number;
   lipides?: number;
   fibres?: number;
+  taillePortion?: string;
   image?: {
     url: string;
     thumbnails: {

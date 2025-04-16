@@ -5,6 +5,7 @@ import { getImageUrl } from '../services/imageService';
 import { getModalContent } from '../services/modalService';
 import { Recette } from '../types/recette';
 import { useTheme } from '../context/ThemeContext';
+import ReactMarkdown from 'react-markdown';
 
 export default function RecetteDetail() {
   const { id } = useParams<{ id: string }>();
@@ -89,7 +90,14 @@ export default function RecetteDetail() {
               </div>
 
               <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.3s]">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Macronutriments</h3>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text">Macronutriments</h3>
+                  {recette.taillePortion && (
+                    <span className="text-sm text-white bg-emerald-500 dark:bg-emerald-600 px-3 py-1 rounded-full">
+                      Portion : {recette.taillePortion}
+                    </span>
+                  )}
+                </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead>
@@ -141,9 +149,29 @@ export default function RecetteDetail() {
                       <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-100 font-semibold mr-3">
                         {index + 1}
                       </span>
-                      <p className="text-gray-600 dark:text-dark-text-secondary">
-                        {etape.trim()}
-                      </p>
+                      <div className="prose dark:prose-invert max-w-none">
+                        <ReactMarkdown
+                          components={{
+                            strong: ({ children }) => (
+                              <strong className="text-amber-600 dark:text-amber-400 font-semibold">
+                                {children}
+                              </strong>
+                            ),
+                            em: ({ children }) => (
+                              <em className="text-gray-500 dark:text-gray-400 italic">
+                                {children}
+                              </em>
+                            ),
+                            p: ({ children }) => (
+                              <p className="text-gray-600 dark:text-dark-text-secondary mb-0">
+                                {children}
+                              </p>
+                            ),
+                          }}
+                        >
+                          {etape.trim()}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                   ))}
                 </div>
