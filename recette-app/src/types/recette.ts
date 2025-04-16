@@ -6,6 +6,10 @@ export interface Recette {
   categorie: string;
   ingredients?: string;
   etapes?: string;
+  proteines?: number;
+  glucides?: number;
+  lipides?: number;
+  fibres?: number;
   image?: {
     url: string;
     thumbnails: {
