@@ -4,14 +4,13 @@ import { fetchRecettes } from '../services/airtable';
 import { getImageUrl } from '../services/imageService';
 import { getModalContent } from '../services/modalService';
 import { Recette } from '../types/recette';
-import { useTheme } from '../context/ThemeContext';
+import ReactMarkdown from 'react-markdown';
 
 export default function RecetteDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [recette, setRecette] = useState<Recette | null>(null);
   const [loading, setLoading] = useState(true);
-  const { theme } = useTheme();
 
   useEffect(() => {
     const loadRecette = async () => {
@@ -88,21 +87,93 @@ export default function RecetteDetail() {
                 </p>
               </div>
 
-              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.4s]">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Ingrédients</h3>
-                <ul className="list-disc pl-5 text-gray-600 dark:text-dark-text-secondary">
-                  {getModalContent(recette).ingredients.map((ingredient: string, index: number) => (
-                    <li key={index}>{ingredient.trim()}</li>
-                  ))}
-                </ul>
+              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.3s]">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text">Macronutriments</h3>
+                  {recette.taillePortion && (
+                    <span className="text-sm text-white bg-emerald-500 dark:bg-emerald-600 px-3 py-1 rounded-full">
+                      Portion : {recette.taillePortion}
+                    </span>
+                  )}
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead>
+                      <tr>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Nutriment</th>
+                        <th className="px-4 py-2 text-right text-sm font-medium text-gray-500 dark:text-gray-400">Quantité</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                      <tr>
+                        <td className="px-4 py-2 text-sm text-gray-600 dark:text-dark-text-secondary">Protéines</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-600 dark:text-dark-text-secondary">{recette.proteines || 0}g</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-2 text-sm text-gray-600 dark:text-dark-text-secondary">Glucides</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-600 dark:text-dark-text-secondary">{recette.glucides || 0}g</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-2 text-sm text-gray-600 dark:text-dark-text-secondary">Lipides</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-600 dark:text-dark-text-secondary">{recette.lipides || 0}g</td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-2 text-sm text-gray-600 dark:text-dark-text-secondary">Fibres</td>
+                        <td className="px-4 py-2 text-sm text-right text-gray-600 dark:text-dark-text-secondary">{recette.fibres || 0}g</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.5s]">
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Instructions</h3>
-              <p className="text-gray-600 dark:text-dark-text-secondary whitespace-pre-line">
-                {getModalContent(recette).steps.join('\n')}
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.4s]">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Ingrédients</h3>
+                <div className="space-y-2">
+                  {recette.ingredients?.split('\n').map((ingredient, index) => (
+                    <p key={index} className="text-gray-600 dark:text-dark-text-secondary">
+                      {ingredient.trim()}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-gray-50 dark:bg-dark-bg rounded-lg p-4 animate-slide-up [animation-delay:0.5s]">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text mb-2">Instructions</h3>
+                <div className="space-y-4">
+                  {recette.etapes?.split('\n').map((etape, index) => (
+                    <div key={index} className="flex items-start">
+                      <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-100 font-semibold mr-3">
+                        {index + 1}
+                      </span>
+                      <div className="prose dark:prose-invert max-w-none">
+                        <ReactMarkdown
+                          components={{
+                            strong: ({ children }) => (
+                              <strong className="text-amber-600 dark:text-amber-400 font-semibold">
+                                {children}
+                              </strong>
+                            ),
+                            em: ({ children }) => (
+                              <em className="text-gray-500 dark:text-gray-400 italic">
+                                {children}
+                              </em>
+                            ),
+                            p: ({ children }) => (
+                              <p className="text-gray-600 dark:text-dark-text-secondary mb-0">
+                                {children}
+                              </p>
+                            ),
+                          }}
+                        >
+                          {etape.trim()}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
