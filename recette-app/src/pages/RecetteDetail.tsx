@@ -4,7 +4,6 @@ import { fetchRecettes } from '../services/airtable';
 import { getImageUrl } from '../services/imageService';
 import { getModalContent } from '../services/modalService';
 import { Recette } from '../types/recette';
-import { useTheme } from '../context/ThemeContext';
 import ReactMarkdown from 'react-markdown';
 
 export default function RecetteDetail() {
@@ -12,7 +11,6 @@ export default function RecetteDetail() {
   const navigate = useNavigate();
   const [recette, setRecette] = useState<Recette | null>(null);
   const [loading, setLoading] = useState(true);
-  const { theme } = useTheme();
 
   useEffect(() => {
     const loadRecette = async () => {
