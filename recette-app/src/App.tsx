@@ -1,18 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { Menu, Transition } from '@headlessui/react';
-import { 
-  MagnifyingGlassIcon, 
-  XMarkIcon, 
-  Bars3Icon, 
-  Squares2X2Icon, 
-  ChevronLeftIcon, 
-  ChevronRightIcon,
-  ChevronDownIcon,
-  ClockIcon,
-  FireIcon,
-  PlusIcon
-} from '@heroicons/react/24/outline';
 import { fetchRecettes } from './services/airtable';
 import { getImageUrl } from './services/imageService';
 import RecetteDetail from './pages/RecetteDetail';
@@ -45,6 +32,7 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'carousel' | 'list'>('carousel');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -108,7 +96,9 @@ function Home() {
             onClick={() => navigate('/recette/new')}
             className="flex items-center px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
           >
-            <PlusIcon className="h-5 w-5 mr-2" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
             Nouvelle recette
           </button>
         </div>
@@ -117,7 +107,9 @@ function Home() {
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
             <div className="relative flex-1 max-w-md">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
               <input
                 type="text"
@@ -131,56 +123,52 @@ function Home() {
                   onClick={() => setSearchTerm('')}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 >
-                  <XMarkIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               )}
             </div>
             
-            <Menu as="div" className="relative">
-              <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-700 dark:text-dark-text">
-                <span className="mr-2">{selectedCategory || 'Toutes les catégories'}</span>
-                <ChevronDownIcon className="h-5 w-5" />
-              </Menu.Button>
-              <Transition
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
+            <div className="relative">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-700 dark:text-dark-text"
               >
-                <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white dark:bg-dark-surface shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                <span className="mr-2">{selectedCategory || 'Toutes les catégories'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {isMenuOpen && (
+                <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white dark:bg-dark-surface shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10 transition-all duration-200 transform opacity-100 scale-100">
                   <div className="py-1">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          onClick={() => setSelectedCategory(null)}
-                          className={`${
-                            active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-dark-text'
-                          } block w-full text-left px-4 py-2 text-sm`}
-                        >
-                          Toutes les catégories
-                        </button>
-                      )}
-                    </Menu.Item>
+                    <button
+                      onClick={() => {
+                        setSelectedCategory(null);
+                        setIsMenuOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-dark-text hover:bg-amber-50 dark:hover:bg-amber-900 hover:text-amber-900 dark:hover:text-amber-50"
+                    >
+                      Toutes les catégories
+                    </button>
                     {categories.map((category) => (
-                      <Menu.Item key={category}>
-                        {({ active }) => (
-                          <button
-                            onClick={() => setSelectedCategory(category)}
-                            className={`${
-                              active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-dark-text'
-                            } block w-full text-left px-4 py-2 text-sm`}
-                          >
-                            {category}
-                          </button>
-                        )}
-                      </Menu.Item>
+                      <button
+                        key={category}
+                        onClick={() => {
+                          setSelectedCategory(category);
+                          setIsMenuOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-dark-text hover:bg-amber-50 dark:hover:bg-amber-900 hover:text-amber-900 dark:hover:text-amber-50"
+                      >
+                        {category}
+                      </button>
                     ))}
                   </div>
-                </Menu.Items>
-              </Transition>
-            </Menu>
+                </div>
+              )}
+            </div>
 
             <div className="flex gap-2">
               <button
@@ -192,7 +180,9 @@ function Home() {
                 } transition-colors duration-200`}
                 title="Vue carrousel"
               >
-                <Squares2X2Icon className="h-5 w-5" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
               </button>
               <button
                 onClick={() => setViewMode('list')}
@@ -203,7 +193,9 @@ function Home() {
                 } transition-colors duration-200`}
                 title="Vue liste"
               >
-                <Bars3Icon className="h-5 w-5" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
               </button>
             </div>
           </div>
@@ -240,10 +232,16 @@ function Home() {
                   </h2>
                   <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-6 text-white mb-6">
                     <span className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
-                      <ClockIcon className="h-5 w-5 mr-2" /> {currentRecette.duree} min
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {currentRecette.duree} min
                     </span>
                     <span className="flex items-center bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
-                      <FireIcon className="h-5 w-5 mr-2" /> {currentRecette.calories} kcal
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                      </svg>
+                      {currentRecette.calories} kcal
                     </span>
                   </div>
                   <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
@@ -256,13 +254,17 @@ function Home() {
                 onClick={prevSlide}
                 className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white transition-colors duration-200 z-10"
               >
-                <ChevronLeftIcon className="h-6 w-6 text-gray-600" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
               <button 
                 onClick={nextSlide}
                 className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white transition-colors duration-200 z-10"
               >
-                <ChevronRightIcon className="h-6 w-6 text-gray-600" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </button>
 
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
@@ -300,10 +302,16 @@ function Home() {
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">{recette.nom}</h3>
                   <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                     <span className="flex items-center">
-                      <ClockIcon className="h-4 w-4 mr-1" /> {recette.duree} min
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {recette.duree} min
                     </span>
                     <span className="flex items-center">
-                      <FireIcon className="h-4 w-4 mr-1" /> {recette.calories} kcal
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                      </svg>
+                      {recette.calories} kcal
                     </span>
                   </div>
                   <span className="inline-block bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-medium">
@@ -335,6 +343,5 @@ function App() {
       </Router>
     </ThemeProvider>
   );
-}
+}export default App;
 
-export default App;
