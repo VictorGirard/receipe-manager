@@ -1,9 +1,18 @@
+export type Categorie = 
+  | 'Entrée'
+  | 'Plat principal'
+  | 'Dessert'
+  | 'Apéritif'
+  | 'Boisson'
+  | 'Sauce'
+  | 'Accompagnement';
+
 export interface Recette {
   id: string;
   nom: string;
   duree: number;
   calories: number;
-  categorie: string;
+  categorie: Categorie;
   ingredients?: string;
   etapes?: string;
   proteines?: number;

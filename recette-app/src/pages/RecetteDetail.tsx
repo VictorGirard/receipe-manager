@@ -58,6 +58,16 @@ export default function RecetteDetail() {
           Retour à l'accueil
         </button>
 
+        <button
+          onClick={() => navigate(`/recette/${id}/edit`)}
+          className="mb-6 ml-4 flex items-center text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 animate-slide-up"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Modifier la recette
+        </button>
+
         <div className="bg-white dark:bg-dark-surface rounded-xl shadow-lg overflow-hidden animate-slide-up [animation-delay:0.1s]">
           {recette.image?.[0] && (
             <div className="relative h-64">

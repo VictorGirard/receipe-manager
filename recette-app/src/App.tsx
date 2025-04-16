@@ -10,11 +10,14 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
   ClockIcon,
-  FireIcon
+  FireIcon,
+  PlusIcon
 } from '@heroicons/react/24/outline';
 import { fetchRecettes } from './services/airtable';
 import { getImageUrl } from './services/imageService';
 import RecetteDetail from './pages/RecetteDetail';
+import EditRecette from './pages/EditRecette';
+import NewRecette from './pages/NewRecette';
 import { ThemeProvider } from './context/ThemeContext';
 import ThemeToggle from './components/ThemeToggle';
 
@@ -97,9 +100,18 @@ function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-dark-bg p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-dark-text">
-          Nos Recettes <span className="text-amber-500">🍽️</span>
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 dark:text-dark-text">
+            Nos Recettes <span className="text-amber-500">🍽️</span>
+          </h1>
+          <button
+            onClick={() => navigate('/recette/new')}
+            className="flex items-center px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+          >
+            <PlusIcon className="h-5 w-5 mr-2" />
+            Nouvelle recette
+          </button>
+        </div>
         
         <div className="max-w-4xl mx-auto mb-8">
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
@@ -316,6 +328,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/recette/:id" element={<RecetteDetail />} />
+            <Route path="/recette/:id/edit" element={<EditRecette />} />
+            <Route path="/recette/new" element={<NewRecette />} />
           </Routes>
         </div>
       </Router>
