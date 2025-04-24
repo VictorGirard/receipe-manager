@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import { 
   MagnifyingGlassIcon, 
