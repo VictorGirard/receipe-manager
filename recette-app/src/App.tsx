@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import { 
   MagnifyingGlassIcon, 
@@ -16,7 +16,11 @@ import { fetchRecettes } from './services/airtable';
 import { getImageUrl } from './services/imageService';
 import RecetteDetail from './pages/RecetteDetail';
 import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ThemeToggle from './components/ThemeToggle';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import { getSession } from './services/sessionService';
 
 interface Recette {
   id: string;
@@ -43,6 +47,7 @@ function Home() {
   const [viewMode, setViewMode] = useState<'carousel' | 'list'>('carousel');
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const getRecettes = async () => {
@@ -95,7 +100,22 @@ function Home() {
   const currentRecette = filteredRecettes[currentIndex];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-dark-bg p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen bg-white dark:bg-dark-bg">
+      <div className="flex justify-between items-center p-4">
+        <ThemeToggle />
+        <div className="flex items-center space-x-4">
+          <span className="text-gray-700 dark:text-gray-300">Bonjour, {user?.name}</span>
+          <button
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            Déconnexion
+          </button>
+        </div>
+      </div>
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-dark-text">
           Nos Recettes <span className="text-amber-500">🍽️</span>
@@ -307,19 +327,62 @@ function Home() {
   );
 }
 
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const session = await getSession();
+      if (!session && !user) {
+        navigate('/login');
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [user, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-600">Chargement...</p>
+      </div>
+    );
+  }
+
+  return user ? <>{children}</> : null;
+}
+
 function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <div className="min-h-screen bg-white dark:bg-dark-bg">
-          <ThemeToggle />
+    <Router>
+      <AuthProvider>
+        <ThemeProvider>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/recette/:id" element={<RecetteDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/recette/:id"
+              element={
+                <PrivateRoute>
+                  <RecetteDetail />
+                </PrivateRoute>
+              }
+            />
           </Routes>
-        </div>
-      </Router>
-    </ThemeProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
