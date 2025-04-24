@@ -20,7 +20,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import ThemeToggle from './components/ThemeToggle';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import { getSession } from './services/sessionService';
 
 interface Recette {
   id: string;
@@ -103,19 +102,8 @@ function Home() {
     <div className="min-h-screen bg-white dark:bg-dark-bg">
       <div className="flex justify-between items-center p-4">
         <ThemeToggle />
-        <div className="flex items-center space-x-4">
-          <span className="text-gray-700 dark:text-gray-300">Bonjour, {user?.name}</span>
-          <button
-            onClick={() => {
-              logout();
-              navigate('/login');
-            }}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Déconnexion
-          </button>
-        </div>
       </div>
+
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-dark-text">
           Nos Recettes <span className="text-amber-500">🍽️</span>
@@ -323,26 +311,42 @@ function Home() {
           </div>
         )}
       </div>
+
+      {/* Bouton de déconnexion avec effet de survol */}
+      <div className="fixed bottom-6 right-6">
+        <button
+          onClick={() => {
+            logout();
+            navigate('/login');
+          }}
+          className="group flex items-center gap-3 px-4 py-2 bg-gray-50 hover:bg-red-50 dark:bg-gray-700 dark:hover:bg-red-900 rounded-lg shadow-lg transition-all duration-200 border border-gray-100 dark:border-gray-600"
+        >
+          <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-600 flex items-center justify-center text-gray-700 dark:text-gray-200 font-medium">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
+          <div className="relative overflow-hidden">
+            <span className="block text-sm text-gray-700 dark:text-gray-200 group-hover:translate-y-[-100%] transition-transform duration-200">
+              {user?.name}
+            </span>
+            <span className="block text-sm text-red-600 dark:text-red-400 absolute top-full group-hover:translate-y-[-100%] transition-transform duration-200">
+              Déconnexion
+            </span>
+          </div>
+        </button>
+      </div>
     </div>
   );
 }
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const session = await getSession();
-      if (!session && !user) {
-        navigate('/login');
-      }
-      setIsLoading(false);
-    };
-
-    checkAuth();
-  }, [user, navigate]);
+    if (!isLoading && !user) {
+      navigate('/login');
+    }
+  }, [user, isLoading, navigate]);
 
   if (isLoading) {
     return (
