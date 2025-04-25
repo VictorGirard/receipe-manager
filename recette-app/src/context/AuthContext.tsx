@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import { login as loginService, register as registerService, updateUserFavorites, getUserFavorites } from '../services/authService';
 import { saveSession, getSession, clearSession } from '../services/sessionService';
 
@@ -25,19 +25,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const initialLoadRef = useRef(false);
 
   useEffect(() => {
     const initAuth = async () => {
-      try {
-        const sessionUser = await getSession();
-        if (sessionUser) {
-          const favorites = await getUserFavorites(sessionUser.id);
-          setUser({ ...sessionUser, favorites });
+      if (!initialLoadRef.current) {
+        initialLoadRef.current = true;
+        try {
+          const sessionUser = await getSession();
+          if (sessionUser) {
+            const favorites = await getUserFavorites(sessionUser.id);
+            setUser({ ...sessionUser, favorites });
+          }
+        } catch (error) {
+          console.error('Erreur lors de l\'initialisation de l\'auth:', error);
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error('Erreur lors de l\'initialisation de l\'auth:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 

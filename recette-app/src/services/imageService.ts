@@ -7,7 +7,12 @@ interface ImageData {
   };
 }
 
-export const getImageUrl = (imageData: ImageData[] | undefined, size: 'small' | 'large' | 'full' = 'large'): string => {
+export const getImageUrl = (imageData: ImageData[] | undefined, size: 'small' | 'large' | 'full' = 'large', imageURL?: string): string => {
+  console.log(imageURL);
+  if (imageURL) {
+    return imageURL;
+  }
+  
   if (!imageData || imageData.length === 0) {
     return '/placeholder-image.jpg'; // Image par défaut
   }

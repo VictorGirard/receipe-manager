@@ -14,11 +14,11 @@ import {
   HeartIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
-import { fetchRecettes } from './services/airtable';
 import { getImageUrl } from './services/imageService';
 import RecetteDetail from './pages/RecetteDetail';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { RecetteProvider, useRecettes } from './context/RecetteContext';
 import ThemeToggle from './components/ThemeToggle';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -39,25 +39,17 @@ interface Recette {
       full: { url: string };
     };
   }[];
+  imageURL?: string;
 }
 
 function Home() {
-  const [recettes, setRecettes] = useState<Recette[]>([]);
+  const { recettes, loading } = useRecettes();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'carousel' | 'list'>('carousel');
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
   const { user, logout, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
-
-  useEffect(() => {
-    const getRecettes = async () => {
-      const data = await fetchRecettes();
-      setRecettes(data);
-    };
-
-    getRecettes();
-  }, []);
 
   const categories = useMemo(() => {
     return Array.from(new Set(recettes.map(r => r.categorie)));
@@ -108,7 +100,7 @@ function Home() {
   }
 
   const currentRecette = filteredRecettes[currentIndex];
-
+  console.log(currentRecette);
   return (
     <div className="min-h-screen bg-white dark:bg-dark-bg">
       <div className="flex justify-between items-center p-4">
@@ -117,7 +109,7 @@ function Home() {
 
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-dark-text">
-          Nos Recettes <span className="text-amber-500">🍽️</span>
+          Recettes <span className="text-amber-500">🍽️</span>
         </h1>
         
         <div className="max-w-4xl mx-auto mb-8">
@@ -230,7 +222,7 @@ function Home() {
                 {currentRecette.image?.[0] && (
                   <div className="absolute inset-0">
                     <img 
-                      src={getImageUrl(currentRecette.image, 'large')}
+                      src={getImageUrl(currentRecette.image, 'large', currentRecette.imageURL)}
                       alt={currentRecette.nom}
                       className="w-full h-full object-cover"
                       style={{ filter: 'blur(8px)' }}
@@ -306,7 +298,7 @@ function Home() {
                 {recette.image?.[0] && (
                   <div className="relative h-48">
                     <img
-                      src={getImageUrl(recette.image, 'large')}
+                      src={getImageUrl(recette.image, 'large', recette.imageURL)}
                       alt={recette.nom}
                       className="w-full h-full object-cover"
                     />
@@ -395,26 +387,28 @@ function App() {
     <Router>
       <AuthProvider>
         <ThemeProvider>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Home />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/recette/:id"
-              element={
-                <PrivateRoute>
-                  <RecetteDetail />
-                </PrivateRoute>
-              }
-            />
-          </Routes>
+          <RecetteProvider>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <Home />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/recette/:id"
+                element={
+                  <PrivateRoute>
+                    <RecetteDetail />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </RecetteProvider>
         </ThemeProvider>
       </AuthProvider>
     </Router>

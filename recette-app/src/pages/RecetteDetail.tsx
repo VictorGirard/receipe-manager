@@ -1,37 +1,27 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchRecettes } from '../services/airtable';
 import { getImageUrl } from '../services/imageService';
 import { getModalContent } from '../services/modalService';
 import { Recette } from '../types/recette';
+import { useRecettes } from '../context/RecetteContext';
 import ReactMarkdown from 'react-markdown';
 
 export default function RecetteDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [recette, setRecette] = useState<Recette | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { recettes, loading } = useRecettes();
 
   useEffect(() => {
-    const loadRecette = async () => {
-      try {
-        const recettes = await fetchRecettes();
-        const foundRecette = recettes.find((r: Recette) => r.id === id);
-        if (foundRecette) {
-          setRecette(foundRecette);
-        } else {
-          navigate('/');
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement de la recette:', error);
+    if (!loading) {
+      const foundRecette = recettes.find((r: Recette) => r.id === id);
+      if (foundRecette) {
+        setRecette(foundRecette);
+      } else {
         navigate('/');
-      } finally {
-        setLoading(false);
       }
-    };
-
-    loadRecette();
-  }, [id, navigate]);
+    }
+  }, [id, navigate, recettes, loading]);
 
   if (loading) {
     return (
@@ -62,7 +52,7 @@ export default function RecetteDetail() {
           {recette.image?.[0] && (
             <div className="relative h-64">
               <img
-                src={getImageUrl(recette.image, 'large')}
+                src={getImageUrl(recette.image, 'large', recette.imageURL)}
                 alt={recette.nom}
                 className="w-full h-full object-cover"
               />

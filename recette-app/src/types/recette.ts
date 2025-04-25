@@ -11,6 +11,7 @@ export interface Recette {
   lipides?: number;
   fibres?: number;
   taillePortion?: string;
+  imageURL?: string;
   image?: {
     url: string;
     thumbnails: {
