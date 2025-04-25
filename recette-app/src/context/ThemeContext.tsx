@@ -24,13 +24,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const root = window.document.documentElement;
     
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
+    // Supprimer d'abord les deux classes
+    root.classList.remove('light', 'dark');
+    
+    // Ajouter la classe appropriée
+    root.classList.add(theme);
     
     localStorage.setItem('theme', theme);
   }, [theme]);

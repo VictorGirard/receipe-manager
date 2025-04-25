@@ -26,7 +26,7 @@ export default function Navigation() {
                 className={`flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors duration-200 ${
                   isActive
                     ? 'text-amber-500'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-amber-500 dark:hover:text-amber-400'
+                    : 'text-gray-500 dark:text-gray-100 hover:text-amber-500 dark:hover:text-amber-400'
                 }`}
               >
                 <item.icon className="h-6 w-6" />

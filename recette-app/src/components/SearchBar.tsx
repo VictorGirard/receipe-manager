@@ -32,7 +32,7 @@ export default function SearchBar({
             placeholder="Rechercher une recette..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-dark-text"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white"
           />
           {searchTerm && (
             <button
@@ -45,7 +45,7 @@ export default function SearchBar({
         </div>
         
         <Menu as="div" className="relative">
-          <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-700 dark:text-dark-text">
+          <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-700 dark:text-white">
             <span className="mr-2">{selectedCategory || 'Toutes les catégories'}</span>
             <ChevronDownIcon className="h-5 w-5" />
           </Menu.Button>
@@ -64,7 +64,7 @@ export default function SearchBar({
                     <button
                       onClick={() => setSelectedCategory(null)}
                       className={`${
-                        active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-dark-text'
+                        active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-white'
                       } block w-full text-left px-4 py-2 text-sm`}
                     >
                       Toutes les catégories
@@ -77,7 +77,7 @@ export default function SearchBar({
                       <button
                         onClick={() => setSelectedCategory(category)}
                         className={`${
-                          active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-dark-text'
+                          active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-white'
                         } block w-full text-left px-4 py-2 text-sm`}
                       >
                         {category}
@@ -96,7 +96,7 @@ export default function SearchBar({
             className={`p-2 rounded-lg ${
               viewMode === 'carousel'
                 ? 'bg-amber-500 text-white'
-                : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-gray-700'
+                : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
             } transition-colors duration-200`}
             title="Vue carrousel"
           >
@@ -107,7 +107,7 @@ export default function SearchBar({
             className={`p-2 rounded-lg ${
               viewMode === 'list'
                 ? 'bg-amber-500 text-white'
-                : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-gray-700'
+                : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
             } transition-colors duration-200`}
             title="Vue liste"
           >

@@ -52,15 +52,14 @@ export default function Carousel({ recettes }: CarouselProps) {
   }
 
   const currentRecette = recettes[currentIndex];
-
   return (
     <div className="max-w-4xl mx-auto relative">
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-[400px] sm:h-[500px] md:h-[600px]">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden h-[400px] sm:h-[500px] md:h-[600px]">
         <div 
           className="cursor-pointer p-6 sm:p-8 relative h-full"
           onClick={() => navigate(`/recette/${currentRecette.id}`)}
         >
-          {currentRecette.image?.[0] && (
+          {(
             <div className="absolute inset-0">
               <img 
                 src={getImageUrl(currentRecette.image, 'large', currentRecette.imageURL)}
@@ -68,7 +67,7 @@ export default function Carousel({ recettes }: CarouselProps) {
                 className="w-full h-full object-cover"
                 style={{ filter: 'blur(8px)' }}
               />
-              <div className="absolute inset-0 bg-black/40" />
+              <div className="absolute inset-0 dark:bg-gray-800" />
             </div>
           )}
           <div className="flex flex-col items-center text-center relative z-10 h-full justify-center">

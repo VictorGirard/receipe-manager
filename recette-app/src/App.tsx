@@ -93,8 +93,8 @@ function Home() {
 
   if (recettes.length === 0) {
     return (
-      <div className="min-h-screen bg-white dark:bg-dark-bg p-4 flex items-center justify-center">
-        <p className="text-xl text-gray-800 dark:text-dark-text">Chargement des recettes...</p>
+      <div className="min-h-screen bg-white dark:bg-sky-900 p-4 flex items-center justify-center">
+        <p className="text-xl text-gray-800 dark:text-white">Chargement des recettes...</p>
       </div>
     );
   }
@@ -102,13 +102,13 @@ function Home() {
   const currentRecette = filteredRecettes[currentIndex];
   console.log(currentRecette);
   return (
-    <div className="min-h-screen bg-white dark:bg-dark-bg">
+    <div className="min-h-screen bg-white dark:bg-sky-900">
       <div className="flex justify-between items-center p-4">
         <ThemeToggle />
       </div>
 
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-dark-text">
+        <h1 className="text-4xl sm:text-5xl font-bold text-center mb-8 text-gray-800 dark:text-white">
           Recettes <span className="text-amber-500">🍽️</span>
         </h1>
         
@@ -123,20 +123,20 @@ function Home() {
                 placeholder="Rechercher une recette..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-dark-text"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-sky-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 >
-                  <XMarkIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400" />
+                  <XMarkIcon className="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-100" />
                 </button>
               )}
             </div>
             
             <Menu as="div" className="relative">
-              <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-dark-surface shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-700 dark:text-dark-text">
+              <Menu.Button className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-sky-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 text-gray-700 dark:text-white">
                 <span className="mr-2">{selectedCategory || 'Toutes les catégories'}</span>
                 <ChevronDownIcon className="h-5 w-5" />
               </Menu.Button>
@@ -155,7 +155,7 @@ function Home() {
                         <button
                           onClick={() => setSelectedCategory(null)}
                           className={`${
-                            active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-dark-text'
+                            active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-white'
                           } block w-full text-left px-4 py-2 text-sm`}
                         >
                           Toutes les catégories
@@ -168,7 +168,7 @@ function Home() {
                           <button
                             onClick={() => setSelectedCategory(category)}
                             className={`${
-                              active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-dark-text'
+                              active ? 'bg-amber-50 dark:bg-amber-900 text-amber-900 dark:text-amber-50' : 'text-gray-700 dark:text-white'
                             } block w-full text-left px-4 py-2 text-sm`}
                           >
                             {category}
@@ -187,7 +187,7 @@ function Home() {
                 className={`p-2 rounded-lg ${
                   viewMode === 'carousel'
                     ? 'bg-amber-500 text-white'
-                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-gray-700'
+                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                 } transition-colors duration-200`}
                 title="Vue carrousel"
               >
@@ -198,7 +198,7 @@ function Home() {
                 className={`p-2 rounded-lg ${
                   viewMode === 'list'
                     ? 'bg-amber-500 text-white'
-                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-dark-text hover:bg-gray-50 dark:hover:bg-gray-700'
+                    : 'bg-white dark:bg-dark-surface text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                 } transition-colors duration-200`}
                 title="Vue liste"
               >
@@ -214,7 +214,7 @@ function Home() {
           </div>
         ) : viewMode === 'carousel' ? (
           <div className="max-w-4xl mx-auto relative">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden h-[400px] sm:h-[500px] md:h-[600px]">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden h-[400px] sm:h-[500px] md:h-[600px]">
               <div 
                 className="cursor-pointer p-6 sm:p-8 relative h-full"
                 onClick={() => navigate(`/recette/${currentRecette.id}`)}
