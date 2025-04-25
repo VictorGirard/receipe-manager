@@ -12,6 +12,7 @@ interface User {
   email: string;
   password: string;
   name: string;
+  favorites?: string[];
 }
 
 interface Session {
@@ -21,6 +22,17 @@ interface Session {
 
 const hashPassword = (password: string): string => {
   return MD5(password).toString();
+};
+
+// Fonction utilitaire pour convertir le texte en tableau
+const favoritesTextToArray = (favoritesText: string | null | undefined): string[] => {
+  if (!favoritesText) return [];
+  return favoritesText.split('\n').filter(id => id.trim() !== '');
+};
+
+// Fonction utilitaire pour convertir le tableau en texte
+const favoritesArrayToText = (favorites: string[]): string => {
+  return favorites.join('\n');
 };
 
 export const login = async (email: string, password: string): Promise<User | null> => {
@@ -42,6 +54,7 @@ export const login = async (email: string, password: string): Promise<User | nul
         email: user.email,
         password: user.password,
         name: user.name,
+        favorites: favoritesTextToArray(user.favorites)
       };
     }
     return null;
@@ -61,6 +74,7 @@ export const register = async (email: string, password: string, name: string): P
           email,
           password: hashedPassword,
           name,
+          favorites: '' // Champ texte vide pour les nouveaux utilisateurs
         },
       },
       {
@@ -77,6 +91,7 @@ export const register = async (email: string, password: string, name: string): P
       email: user.email,
       password: user.password,
       name: user.name,
+      favorites: []
     };
   } catch (error) {
     console.error('Erreur lors de l\'inscription:', error);
@@ -115,4 +130,64 @@ export const getSession = (): User | null => {
 
 export const clearSession = () => {
   Cookies.remove(COOKIE_NAME);
+};
+
+export const updateUserFavorites = async (userId: string, favorites: string[]): Promise<User | null> => {
+  try {
+    // D'abord, récupérer l'utilisateur complet
+    const userResponse = await axios.get(`${BASE_URL}/${USERS_TABLE_ID}/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_TOKEN}`,
+      },
+    });
+
+    const currentUser = userResponse.data.fields;
+
+    // Mettre à jour l'utilisateur avec tous ses champs et les nouveaux favoris
+    const response = await axios.patch(
+      `${BASE_URL}/${USERS_TABLE_ID}/${userId}`,
+      {
+        fields: {
+          email: currentUser.email,
+          password: currentUser.password,
+          name: currentUser.name,
+          favorites: favoritesArrayToText(favorites) // Convertir le tableau en texte avec sauts de ligne
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const user = response.data.fields;
+    return {
+      id: response.data.id,
+      email: user.email,
+      password: user.password,
+      name: user.name,
+      favorites: favoritesTextToArray(user.favorites)
+    };
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour des favoris:', error);
+    return null;
+  }
+};
+
+export const getUserFavorites = async (userId: string): Promise<string[]> => {
+  try {
+    const response = await axios.get(`${BASE_URL}/${USERS_TABLE_ID}/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_TOKEN}`,
+      },
+    });
+
+    const user = response.data.fields;
+    return favoritesTextToArray(user.favorites);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des favoris:', error);
+    return [];
+  }
 }; 

@@ -10,8 +10,10 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
   ClockIcon,
-  FireIcon
+  FireIcon,
+  HeartIcon
 } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { fetchRecettes } from './services/airtable';
 import { getImageUrl } from './services/imageService';
 import RecetteDetail from './pages/RecetteDetail';
@@ -46,7 +48,7 @@ function Home() {
   const [viewMode, setViewMode] = useState<'carousel' | 'list'>('carousel');
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, addToFavorites, removeFromFavorites, isFavorite } = useAuth();
 
   useEffect(() => {
     const getRecettes = async () => {
@@ -87,6 +89,15 @@ function Home() {
       return () => clearInterval(timer);
     }
   }, [filteredRecettes.length]);
+
+  const handleFavoriteClick = async (e: React.MouseEvent, recipeId: string) => {
+    e.stopPropagation();
+    if (isFavorite(recipeId)) {
+      await removeFromFavorites(recipeId);
+    } else {
+      await addToFavorites(recipeId);
+    }
+  };
 
   if (recettes.length === 0) {
     return (
@@ -246,6 +257,16 @@ function Home() {
                     {currentRecette.categorie}
                   </span>
                 </div>
+                <button
+                  onClick={(e) => handleFavoriteClick(e, currentRecette.id)}
+                  className="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white shadow-lg transition-all duration-200"
+                >
+                  {isFavorite(currentRecette.id) ? (
+                    <HeartIconSolid className="h-6 w-6 text-red-500" />
+                  ) : (
+                    <HeartIcon className="h-6 w-6 text-gray-600 hover:text-red-500" />
+                  )}
+                </button>
               </div>
               
               <button 
@@ -279,7 +300,7 @@ function Home() {
             {filteredRecettes.map((recette) => (
               <div
                 key={recette.id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300"
+                className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 relative"
                 onClick={() => navigate(`/recette/${recette.id}`)}
               >
                 {recette.image?.[0] && (
@@ -306,6 +327,16 @@ function Home() {
                     {recette.categorie}
                   </span>
                 </div>
+                <button
+                  onClick={(e) => handleFavoriteClick(e, recette.id)}
+                  className="absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white shadow-lg transition-all duration-200"
+                >
+                  {isFavorite(recette.id) ? (
+                    <HeartIconSolid className="h-5 w-5 text-red-500" />
+                  ) : (
+                    <HeartIcon className="h-5 w-5 text-gray-600 hover:text-red-500" />
+                  )}
+                </button>
               </div>
             ))}
           </div>
