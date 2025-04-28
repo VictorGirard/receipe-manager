@@ -23,27 +23,8 @@ import ThemeToggle from './components/ThemeToggle';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 
-interface Recette {
-  id: string;
-  nom: string;
-  duree: number;
-  calories: number;
-  categorie: string;
-  ingredients?: string;
-  etapes?: string;
-  image?: {
-    url: string;
-    thumbnails: {
-      small: { url: string };
-      large: { url: string };
-      full: { url: string };
-    };
-  }[];
-  imageURL?: string;
-}
-
 function Home() {
-  const { recettes, loading } = useRecettes();
+  const { recettes } = useRecettes();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'carousel' | 'list'>('carousel');

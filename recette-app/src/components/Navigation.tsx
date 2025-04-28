@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Navigation() {
   const location = useLocation();
-  const { user } = useAuth();
+  useAuth(); // On garde l'appel pour maintenir la connexion
 
   const navigationItems = [
     { name: 'Accueil', href: '/', icon: HomeIcon },
